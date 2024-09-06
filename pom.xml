@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.akhilsharma</groupId>
     <artifactId>java-basic-application</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>spring web mvc</name>
 
@@ -11,65 +11,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>11</jdk.version>
         <spring.version>5.2.22.RELEASE</spring.version>
-        <servletapi.version>4.0.4</servletapi.version>
-        <thymeleaf.spring.version>3.0.15.RELEASE</thymeleaf.spring.version>
-        <webjars.version>5.2.0</webjars.version>
-        <hamcrest.version>2.2</hamcrest.version>
-        <junit.version>5.9.0</junit.version>
     </properties>
 
     <dependencies>
-
+        <!-- Spring Web MVC -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring5</artifactId>
-            <version>${thymeleaf.spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>${webjars.version}</version>
-        </dependency>
-
+        <!-- Servlet API -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servletapi.version}</version>
+            <version>4.0.4</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>${hamcrest.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-
         <plugins>
+            <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -80,21 +43,14 @@
                 </configuration>
             </plugin>
 
-            <!-- Add this plugin to generate the MANIFEST.MF with Main-Class -->
+            <!-- WAR packaging -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.akhilsharma.MainApplication</mainClass> <!-- Update this to your actual main class -->
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
 
+            <!-- Jetty Plugin for embedded server -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -108,5 +64,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
