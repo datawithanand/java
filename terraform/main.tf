@@ -1,23 +1,40 @@
-resource "aws_eks_cluster" "eks" {
-  name     = "my-k8s-cluster"
-  role_arn = aws_iam_role.eks_role.arn
+provider "aws" {
+  region = "us-east-1"
+}
 
-  vpc_config {
-    subnet_ids = aws_subnet.eks_subnets[*].id
+resource "aws_instance" "app_server" {
+  ami           = "ami-08b5b3a93ed654d19" # Replace with latest Amazon Linux AMI
+  instance_type = "t2.micro"
+
+  security_groups = [aws_security_group.app_sg.name]
+
+  tags = {
+    Name = "SpringAppServer"
   }
 }
 
-resource "aws_eks_node_group" "eks_nodes" {
-  cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "worker-nodes"
-  node_role_arn   = aws_iam_role.eks_nodes.arn
-  subnet_ids      = aws_subnet.eks_subnets[*].id
+resource "aws_security_group" "app_sg" {
+  name        = "app-security-group"
+  description = "Allow inbound traffic"
 
-  scaling_config {
-    desired_size = 2
-    min_size     = 1
-    max_size     = 3
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  instance_types = ["t3.medium"]
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
