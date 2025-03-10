@@ -1,19 +1,9 @@
-# Provider Configuration
+# Provider Configuration (Keep only one)
 provider "aws" {
   region = "us-east-1"
 }
 
-# Store Terraform State in S3
-terraform {
-  backend "s3" {
-    bucket         = "staging-devsecops"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-lock"
-  }
-}
-
-# Fetch the Latest Amazon Linux AMI Dynamically
+# Fetch the Latest Amazon Linux AMI
 data "aws_ami" "latest_amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -45,12 +35,11 @@ resource "aws_instance" "app_server" {
   }
 }
 
-# Security Group for the EC2 Instance
+# Security Group
 resource "aws_security_group" "app_sg" {
   name        = "app-security-group"
   description = "Allow inbound traffic"
 
-  # Allow SSH Access
   ingress {
     from_port   = 22
     to_port     = 22
@@ -58,7 +47,6 @@ resource "aws_security_group" "app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow HTTP Access
   ingress {
     from_port   = 80
     to_port     = 80
@@ -66,17 +54,10 @@ resource "aws_security_group" "app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow All Outbound Traffic
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-# Output Public IP for Easy Access
-output "ec2_public_ip" {
-  value = aws_instance.app_server[0].public_ip
-  description = "Public IP of the EC2 instance"
 }
